@@ -1,0 +1,234 @@
+/* =========================================================
+   menu.css — cabeçalho fixo, menu e versão celular (gaveta)
+   ========================================================= */
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--header-h);
+    transition: box-shadow 0.3s;
+}
+
+/* O desfoque fica num pseudo-elemento: se ficasse no próprio header,
+   o menu "fixed" do celular passaria a se posicionar dentro dele. */
+.site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(7, 13, 20, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.site-header.scrolled::before {
+    border-bottom-color: var(--border);
+}
+
+.header-inner {
+    width: min(1100px, 100% - 40px);
+    height: 100%;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ---------- Logo ---------- */
+.logo {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    color: var(--text-strong);
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+/* ---------- Menu (desktop) ---------- */
+.main-menu {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
+
+.main-menu ul {
+    display: flex;
+    gap: 28px;
+}
+
+.main-menu ul a {
+    position: relative;
+    padding-block: 6px;
+    font-family: var(--font-head);
+    font-size: 0.98rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    transition: color 0.25s;
+}
+
+.main-menu ul a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+}
+
+.main-menu ul a:hover,
+.main-menu ul a.active {
+    color: var(--accent);
+}
+
+.main-menu ul a:hover::after,
+.main-menu ul a.active::after {
+    transform: scaleX(1);
+}
+
+.social {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.social img {
+    height: 22px;
+    width: 22px;
+    opacity: 0.8;
+    transition: opacity 0.25s, transform 0.25s;
+}
+
+.social a:hover img {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Botão hambúrguer e fundo escuro: só aparecem no celular */
+.hamburguer,
+.menu-backdrop {
+    display: none;
+}
+
+/* ---------- Celular / tablet ---------- */
+@media (max-width: 860px) {
+
+    .hamburguer {
+        display: block;
+        position: relative;
+        z-index: 120;
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburguer span {
+        position: absolute;
+        left: 9px;
+        right: 9px;
+        height: 3px;
+        background: var(--text-strong);
+        border-radius: 3px;
+        transition: transform 0.3s, opacity 0.3s, top 0.3s;
+    }
+
+    .hamburguer span:nth-child(1) { top: 14px; }
+    .hamburguer span:nth-child(2) { top: 21px; }
+    .hamburguer span:nth-child(3) { top: 28px; }
+
+    .hamburguer.active span:nth-child(1) {
+        top: 21px;
+        transform: rotate(45deg);
+    }
+
+    .hamburguer.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburguer.active span:nth-child(3) {
+        top: 21px;
+        transform: rotate(-45deg);
+    }
+
+    .menu-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0, 0, 0, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .menu-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Gaveta que desliza pela direita */
+    .main-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 110;
+        width: min(300px, 82vw);
+        padding: calc(var(--header-h) + 24px) 28px 28px;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0;
+        background: var(--bg-soft);
+        border-left: 1px solid var(--border);
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.35s ease, visibility 0s linear 0.35s;
+    }
+
+    .main-menu.active {
+        transform: translateX(0);
+        visibility: visible;
+        transition-delay: 0s;
+    }
+
+    .main-menu ul {
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .main-menu ul a {
+        display: block;
+        padding: 12px 0;
+        font-size: 1.15rem;
+    }
+
+    .main-menu ul a::after {
+        display: none;
+    }
+
+    .social {
+        margin-top: auto;
+        gap: 18px;
+    }
+
+    .social img {
+        height: 26px;
+        width: 26px;
+    }
+}
